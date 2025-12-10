@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply m-0 min-h-screen font-sans bg-gradient-to-br from-sky-300 via-cyan-200 to-sky-100;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.85);
+  outline-offset: 3px;
+}
