@@ -9,8 +9,8 @@ const TOTAL_QUESTIONS = questions.length;
 
 const App: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>(
-    () => Array(TOTAL_QUESTIONS).fill(null)
+  const [answers, setAnswers] = useState<(number | null)[]>(() =>
+    Array(TOTAL_QUESTIONS).fill(null)
   );
   const [view, setView] = useState<View>("quiz");
   const [scorePercent, setScorePercent] = useState(0);
@@ -92,9 +92,7 @@ const App: React.FC = () => {
           transition={{ duration: 0.4 }}
           className="w-full max-w-3xl bg-white/80 rounded-[32px] px-16 py-20 flex flex-col items-center shadow-xl"
         >
-          <p className="text-3xl text-quizPrimary font-display mb-4">
-            Your Final Score Is
-          </p>
+          <p className="text-3xl text-quizPrimary font-display mb-4">Your Final Score Is</p>
 
           <motion.p
             key={animatedScore}
@@ -109,7 +107,7 @@ const App: React.FC = () => {
 
           <button
             onClick={handleRestart}
-            className="mt-12 px-10 py-3 rounded-full bg-sky-200 text-quizPrimary shadow hover:bg-sky-300 transition"
+            className="mt-12 px-10 py-3 rounded-full bg-white text-quizPrimary border border-slate-300 shadow hover:bg-sky-50 transition"
           >
             Start Again
           </button>
@@ -122,47 +120,51 @@ const App: React.FC = () => {
     <main className="min-h-screen flex items-center justify-center px-4 relative">
       <button
         onClick={handleRestart}
-        className="fixed bottom-6 right-6 px-6 py-3 rounded-full bg-white shadow text-slate-700 hover:text-quizPrimary hover:shadow-md transition z-50"
+        className="fixed bottom-6 right-6 px-6 py-3 rounded-full bg-white text-slate-700 border border-slate-300 shadow hover:bg-sky-50 transition z-[999]"
       >
         Restart quiz
       </button>
 
       <div className="relative w-full max-w-5xl bg-white/50 rounded-[32px] shadow-lg p-6 overflow-visible">
-        <div className="w-full max-w-4xl mx-auto bg-quizCard/95 rounded-[28px] shadow-quiz border border-white/70 overflow-hidden relative">
-
-          {currentIndex === 0 && (
-            <>
-              <motion.div
-                className="absolute left-4 bottom-16 z-40 pointer-events-none"
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        {currentIndex === 0 && (
+          <>
+            <motion.div
+              className="absolute left-[-10px] bottom-40 z-[999] pointer-events-none"
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+              style={{ fontFamily: '"Caveat Brush", cursive', transform: "rotate(-2.5deg)" }}
+            >
+              <div
+                className="shadow bg-white border border-sky-300 text-[#15313D]"
                 style={{
-                  fontFamily: '"Patrick Hand", cursive',
-                  transform: "rotate(-3deg)"
+                  fontFamily: '"Caveat Brush", cursive',
+                  fontSize: "22px",
+                  fontWeight: "700",
+                  lineHeight: "20px",
+                  letterSpacing: "-0.5px",
+                  padding: "12px 20px",
+                  borderRadius: "30px",
+                  width: "fit-content"
                 }}
               >
-                <div className="px-5 py-2 rounded-2xl shadow bg-white border border-sky-300 text-[18px]">
-                  Best of Luck!
-                </div>
-              </motion.div>
+                Best of Luck!
+              </div>
+            </motion.div>
 
-              <motion.img
-                src={PawSticker}
-                className="absolute left-6 bottom-0 w-20 z-40 select-none pointer-events-none"
-                initial={{ y: 2 }}
-                animate={{ y: [2, -2, 2] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </>
-          )}
+            <motion.img
+              src={PawSticker}
+              className="absolute left-[90px] bottom-6 w-32 z-[999] select-none pointer-events-none"
+              initial={{ y: 2 }}
+              animate={{ y: [2, -2, 2] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </>
+        )}
 
+        <div className="w-full max-w-4xl mx-auto bg-quizCard/95 rounded-[28px] shadow-quiz border border-white/70 overflow-hidden relative">
           <div className="px-10 py-6 border-b border-white/40">
             <header className="text-center">
-              <h1
-                ref={questionHeadingRef}
-                tabIndex={-1}
-                className="font-display text-[44px] text-quizPrimary mb-2 italic tracking-tight font-bold"
-              >
+              <h1 ref={questionHeadingRef} tabIndex={-1} className="font-display text-[44px] text-quizPrimary mb-2 italic tracking-tight font-bold">
                 Test Your Knowledge
               </h1>
 
@@ -172,12 +174,7 @@ const App: React.FC = () => {
 
               <div className="flex items-center justify-center gap-3">
                 {questions.map((_, idx) => (
-                  <div
-                    key={idx}
-                    className={`h-[3px] w-20 rounded-full ${
-                      idx <= currentIndex ? "bg-quizPrimary" : "bg-slate-200"
-                    }`}
-                  />
+                  <div key={idx} className={`h-[3px] w-20 rounded-full ${idx <= currentIndex ? "bg-quizPrimary" : "bg-slate-200"}`} />
                 ))}
               </div>
             </header>
@@ -197,22 +194,22 @@ const App: React.FC = () => {
                   Question {currentIndex + 1} of {TOTAL_QUESTIONS}
                 </p>
 
-                <div className="w-full rounded-2xl bg-gradient-to-r from-sky-100 to-sky-200 px-6 py-4 text-[16px] font-medium text-slate-800 border border-sky-100 shadow-sm text-center">
+                <div className="w-full max-w-lg rounded-lg bg-gradient-to-r from-sky-100 to-sky-200 px-8 py-4 text-[18px] font-medium text-slate-800 border border-sky-100 shadow-sm text-center">
                   <span className="mr-2 font-semibold">{currentIndex + 1}.</span>
                   {currentQuestion.text}
                 </div>
 
-                <div className="space-y-2 w-full">
+                <div className="space-y-2 w-full max-w-lg">
                   {currentQuestion.options.map((option, idx) => {
                     const selected = answers[currentIndex] === idx;
                     return (
                       <button
                         key={option}
                         onClick={() => handleSelect(idx)}
-                        className={`w-full text-center px-6 py-4 rounded-2xl border bg-gradient-to-r from-sky-50 to-sky-100 shadow-sm text-[16px] font-medium ${
+                        className={`w-full text-center px-8 py-3 rounded-lg border bg-gradient-to-r from-sky-50 to-sky-100 shadow-sm text-[16px] font-medium transition ${
                           selected
-                            ? "border-sky-400 ring-2 ring-sky-300"
-                            : "border-sky-100"
+                            ? "bg-gradient-to-r from-sky-100 to-sky-200 border-sky-400 ring-2 ring-sky-300"
+                            : "border-sky-100 hover:bg-gradient-to-r hover:from-sky-100 hover:to-sky-200"
                         }`}
                       >
                         {option}
@@ -228,7 +225,7 @@ const App: React.FC = () => {
             <button
               onClick={handlePrev}
               disabled={currentIndex === 0}
-              className={`h-12 w-12 rounded-full border text-lg shadow-sm ${
+              className={`h-10 w-10 rounded-lg border text-lg shadow-sm ${
                 currentIndex === 0
                   ? "bg-slate-100 text-slate-300 border-slate-200"
                   : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50"
@@ -241,10 +238,10 @@ const App: React.FC = () => {
               <button
                 onClick={handleNext}
                 disabled={!hasAnswer}
-                className={`h-12 w-12 rounded-full border text-lg shadow-sm ${
+                className={`h-10 w-10 rounded-lg border text-lg shadow-sm transition ${
                   !hasAnswer
-                    ? "bg-slate-100 text-slate-300 border-slate-200"
-                    : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50"
+                    ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed opacity-50"
+                    : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50 cursor-pointer"
                 }`}
               >
                 →
@@ -253,10 +250,10 @@ const App: React.FC = () => {
               <button
                 onClick={handleSubmit}
                 disabled={!hasAnswer}
-                className={`px-8 py-2 rounded-full text-sm font-semibold shadow-sm border ${
+                className={`h-10 w-24 rounded-lg text-sm font-semibold shadow-sm border flex items-center justify-center transition ${
                   !hasAnswer
-                    ? "bg-slate-100 text-slate-300 border-slate-200"
-                    : "bg-sky-200 text-quizPrimary border-sky-300 hover:bg-sky-300"
+                    ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed opacity-50"
+                    : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50 cursor-pointer"
                 }`}
               >
                 Submit
