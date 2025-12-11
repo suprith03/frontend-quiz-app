@@ -1,73 +1,120 @@
-# React + TypeScript + Vite
+# Quiz Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, animated quiz web application built using React, TypeScript, TailwindCSS, and Framer Motion.  
+This project was developed as part of a frontend assignment, focusing on UI accuracy, smooth animations, and clean component structure.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Setup Instructions
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd quiz-app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Install dependencies
+```bash
+npm install
 ```
+
+### 3. Start development server
+```bash
+npm run dev
+```
+
+### 4. Build for production
+```bash
+npm run build
+```
+
+---
+
+## 🧰 Tech Stack Used
+
+| Technology     | Purpose |
+|----------------|---------|
+| **React + TypeScript** | Core UI and application state |
+| **TailwindCSS** | Styling and responsive UI |
+| **Framer Motion** | Animations - page transitions, bounce effects, score counter animation |
+| **Vite** | Development server + build tooling |
+
+---
+
+## ✨ Key Features Implemented
+
+### 1. Complete Quiz Flow
+- Multi‑step questions  
+- Previous, Next, Submit flow  
+- Answer validation  
+- Score calculation  
+
+### 2. Animated Scorecard
+- Rolling number animation for final score  
+- Smooth fade‑in and scale transition  
+
+### 3. Figma‑accurate UI
+- Gradient backgrounds  
+- Rounded container card  
+- Styled progress indicator  
+- Clean spacing, typography, and layout  
+
+### 4. Animated Paw Sticker & Bubble
+- Floating bounce animation   
+
+### 5. Accessible & Responsive
+- Keyboard focus maintained on heading  
+- Responsive layout tested on desktop 
+
+---
+
+## ⏱️ Time Spent on the Assignment
+
+| Task | Time |
+|------|------|
+| Project setup & environment | 30 minutes |
+| Base quiz UI | 2 hour |
+| Navigation + logic + state | 1 hour |
+| Scorecard with rolling animation | ~ 40 minutes |
+| Figma‑accurate alignment & styling | 1 hour |
+| Paw sticker animation + bubble | ~ 35 minutes |
+| Final polishing, cleanup & testing | 1 hour |
+| **Total Time Spent** | **~7 hours** |
+
+---
+
+## 📦 Folder Structure
+
+```
+quiz-app/
+│
+├── node_modules/
+│
+├── public/
+│   └── icon.png
+│
+├── src/
+│   ├── assets/
+│   │   └── best-of-luck.gif
+│   │
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── questions.ts
+│
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── README.md
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+
+---
+
