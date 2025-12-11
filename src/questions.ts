@@ -34,6 +34,6 @@ export const questions: Question[] = [
     id: 5,
     text: 'Which of these is not a smart phone brand?',
     options: ['Apple', 'Samsung', 'Predator'],
-    correctIndex: 3,
+    correctIndex: 2,
   },
 ];

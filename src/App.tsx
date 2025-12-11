@@ -2,15 +2,15 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { questions } from "./questions";
 import type { Question } from "./questions";
 import { motion, AnimatePresence } from "framer-motion";
-import BestOfLuckSticker from "./assets/best-of-luck.png";
+import PawSticker from "./assets/best-of-luck.gif";
 
 type View = "quiz" | "score";
 const TOTAL_QUESTIONS = questions.length;
 
 const App: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>(() =>
-    Array(TOTAL_QUESTIONS).fill(null)
+  const [answers, setAnswers] = useState<(number | null)[]>(
+    () => Array(TOTAL_QUESTIONS).fill(null)
   );
   const [view, setView] = useState<View>("quiz");
   const [scorePercent, setScorePercent] = useState(0);
@@ -21,8 +21,8 @@ const App: React.FC = () => {
     [currentIndex]
   );
 
-  const hasAnswerForCurrent = answers[currentIndex] !== null;
-  const isLastQuestion = currentIndex === TOTAL_QUESTIONS - 1;
+  const hasAnswer = answers[currentIndex] !== null;
+  const isLast = currentIndex === TOTAL_QUESTIONS - 1;
 
   useEffect(() => {
     if (view === "quiz" && questionHeadingRef.current) {
@@ -30,37 +30,29 @@ const App: React.FC = () => {
     }
   }, [currentIndex, view]);
 
-  const handleSelectOption = (optionIndex: number) => {
+  const handleSelect = (i: number) => {
     setAnswers((prev) => {
       const next = [...prev];
-      next[currentIndex] = optionIndex;
+      next[currentIndex] = i;
       return next;
     });
   };
 
   const handleNext = () => {
-    if (!hasAnswerForCurrent) return;
-    if (currentIndex < TOTAL_QUESTIONS - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    }
+    if (hasAnswer && !isLast) setCurrentIndex((p) => p + 1);
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
+    if (currentIndex > 0) setCurrentIndex((p) => p - 1);
   };
 
   const handleSubmit = () => {
-    if (!hasAnswerForCurrent) return;
-
-    let correctCount = 0;
-    answers.forEach((answerIdx, i) => {
-      if (answerIdx === questions[i].correctIndex) correctCount += 1;
+    if (!hasAnswer) return;
+    let score = 0;
+    answers.forEach((ans, i) => {
+      if (ans === questions[i].correctIndex) score++;
     });
-
-    const percent = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
-    setScorePercent(percent);
+    setScorePercent(Math.round((score / TOTAL_QUESTIONS) * 100));
     setView("score");
   };
 
@@ -75,28 +67,21 @@ const App: React.FC = () => {
     return (
       <main className="min-h-screen flex items-center justify-center px-8">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="w-full max-w-4xl bg-quizCard/90 shadow-quiz rounded-[32px] px-16 py-20 flex flex-col items-center"
+          transition={{ duration: 0.4 }}
+          className="w-full max-w-3xl bg-white/80 rounded-[32px] px-16 py-20 flex flex-col items-center shadow-xl"
         >
-          <button className="px-6 py-2 mb-12 rounded-full bg-white/70 text-sm font-medium text-quizPrimary tracking-wide shadow-sm hover:shadow-md">
-            Keep Learning!
-          </button>
-
-          <p className="text-2xl md:text-3xl text-quizPrimary font-display mb-4 text-center">
-            Your Final score is
+          <p className="text-3xl text-quizPrimary font-display mb-4">
+            Your Final Score Is
           </p>
-
-          <p className="text-[72px] leading-none font-display text-quizPrimary mb-8">
+          <p className="text-[72px] font-display text-quizPrimary">
             {scorePercent}
-            <span className="text-3xl align-super ml-1">%</span>
+            <span className="text-3xl ml-1">%</span>
           </p>
-
           <button
-            type="button"
             onClick={handleRestart}
-            className="mt-4 px-10 py-3 rounded-full bg-sky-200 font-medium text-quizPrimary shadow-sm hover:bg-sky-300 hover:shadow-md transition text-base"
+            className="mt-12 px-10 py-3 rounded-full bg-sky-200 text-quizPrimary shadow hover:bg-sky-300 transition"
           >
             Start Again
           </button>
@@ -106,136 +91,144 @@ const App: React.FC = () => {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-8 py-4">
-      <div className="w-full max-w-4xl bg-quizCard/90 rounded-[32px] shadow-quiz border border-white/70 overflow-hidden">
-        <div className="px-10 py-6 border-b border-white/40">
-          <header className="text-center">
-            <h1
-              ref={questionHeadingRef}
-              tabIndex={-1}
-              className="font-display text-[48px] leading-tight text-quizPrimary mb-2 italic tracking-tight"
-            >
-              Test Your Knowledge
-            </h1>
+    <main className="min-h-screen flex items-center justify-center px-4 relative">
+      <button
+        onClick={handleRestart}
+        className="fixed bottom-6 right-6 px-6 py-3 rounded-full bg-white shadow text-slate-700 hover:text-quizPrimary hover:shadow-md transition z-50"
+      >
+        Restart quiz
+      </button>
 
-            <p className="inline-flex items-center justify-center px-6 py-2 rounded-full bg-white/90 text-[13px] text-slate-500 shadow-sm mb-4">
-              Answer all questions to see your results
-            </p>
+      <div className="relative w-full max-w-5xl bg-white/50 rounded-[32px] shadow-lg p-6 overflow-visible">
+        <div className="w-full max-w-4xl mx-auto bg-quizCard/95 rounded-[28px] shadow-quiz border border-white/70 overflow-hidden relative">
 
-            <div className="flex items-center justify-center gap-3">
-              {questions.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`h-[3px] w-20 rounded-full transition-all duration-300 ${
-                    idx <= currentIndex ? "bg-quizPrimary" : "bg-slate-200"
-                  }`}
-                />
-              ))}
-            </div>
-          </header>
-        </div>
+          {currentIndex === 0 && (
+            <>
+              <motion.div
+                className="absolute left-4 bottom-16 z-40 pointer-events-none"
+                animate={{ y: [0, -3, 0] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  fontFamily: '"Patrick Hand", cursive',
+                  transform: "rotate(-3deg)"
+                }}
+              >
+                <div className="px-5 py-2 rounded-2xl shadow bg-white border border-sky-300 text-[18px]">
+                  Best of Luck!
+                </div>
+              </motion.div>
 
-        <div className="relative px-10 py-6 pb-24 border-b border-white/40 overflow-visible min-h-[330px]">
-          <img
-            src={BestOfLuckSticker}
-            alt="Good Luck Cat"
-            className="absolute left-6 bottom-6 w-24 h-auto pointer-events-none select-none z-10"
-            draggable="false"
-          />
+              <motion.img
+                src={PawSticker}
+                className="absolute left-6 bottom-0 w-20 z-40 select-none pointer-events-none"
+                initial={{ y: 2 }}
+                animate={{ y: [2, -2, 2] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </>
+          )}
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="space-y-3"
-            >
-              <p className="text-sm text-slate-500 font-medium">
-                Question {currentIndex + 1} of {TOTAL_QUESTIONS}
+          <div className="px-10 py-6 border-b border-white/40">
+            <header className="text-center">
+              <h1
+                ref={questionHeadingRef}
+                tabIndex={-1}
+                className="font-display text-[44px] text-quizPrimary mb-2 italic tracking-tight"
+              >
+                Test Your Knowledge
+              </h1>
+
+              <p className="inline-flex items-center justify-center px-6 py-2 rounded-full bg-white text-[13px] text-slate-500 shadow-sm mb-4">
+                Answer all questions to see your results
               </p>
 
-              <div className="rounded-2xl bg-gradient-to-r from-sky-100 via-sky-100 to-sky-200 px-6 py-4 text-[16px] font-medium text-slate-800 shadow-sm border border-sky-100 font-sans">
-                <span className="mr-2 font-semibold">{currentIndex + 1}.</span>
-                {currentQuestion.text}
+              <div className="flex items-center justify-center gap-3">
+                {questions.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`h-[3px] w-20 rounded-full ${
+                      idx <= currentIndex ? "bg-quizPrimary" : "bg-slate-200"
+                    }`}
+                  />
+                ))}
               </div>
+            </header>
+          </div>
 
-              <div className="space-y-2" role="list">
-                {currentQuestion.options.map((option, idx) => {
-                  const isSelected = answers[currentIndex] === idx;
+          <div className="relative px-10 py-8 border-b border-white/40 min-h-[300px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                <p className="text-sm text-slate-500 font-medium">
+                  Question {currentIndex + 1} of {TOTAL_QUESTIONS}
+                </p>
 
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      role="listitem"
-                      aria-pressed={isSelected}
-                      onClick={() => handleSelectOption(idx)}
-                      className={[
-                        "w-full text-left px-6 py-4 rounded-2xl border",
-                        "bg-gradient-to-r from-sky-50 via-sky-50 to-sky-100",
-                        "transition shadow-sm text-[16px] font-medium text-slate-700 font-sans",
-                        "hover:shadow-md hover:-translate-y-[1px]",
-                        isSelected
-                          ? "border-sky-400 ring-2 ring-sky-300"
-                          : "border-sky-100",
-                      ].join(" ")}
-                    >
-                      {option}
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+                <div className="rounded-2xl bg-gradient-to-r from-sky-100 to-sky-200 px-6 py-4 text-[16px] font-medium text-slate-800 border border-sky-100 shadow-sm">
+                  <span className="mr-2 font-semibold">{currentIndex + 1}.</span>
+                  {currentQuestion.text}
+                </div>
 
-        <div className="relative px-10 py-6 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={handleRestart}
-            className="text-base font-medium text-slate-500 underline decoration-slate-300 underline-offset-4 hover:text-quizPrimary transition"
-          >
-            Restart quiz
-          </button>
+                <div className="space-y-2">
+                  {currentQuestion.options.map((option, idx) => {
+                    const selected = answers[currentIndex] === idx;
+                    return (
+                      <button
+                        key={option}
+                        onClick={() => handleSelect(idx)}
+                        className={`w-full text-left px-6 py-4 rounded-2xl border bg-gradient-to-r from-sky-50 to-sky-100 shadow-sm text-[16px] font-medium ${
+                          selected
+                            ? "border-sky-400 ring-2 ring-sky-300"
+                            : "border-sky-100"
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          <div className="flex items-center gap-3">
+          <div className="px-10 py-6 flex items-center justify-end gap-3">
             <button
-              type="button"
               onClick={handlePrev}
               disabled={currentIndex === 0}
-              className={`inline-flex items-center justify-center h-12 w-12 rounded-full border text-lg shadow-sm transition ${
+              className={`h-12 w-12 rounded-full border text-lg shadow-sm ${
                 currentIndex === 0
-                  ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed"
-                  : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50 hover:shadow-md"
+                  ? "bg-slate-100 text-slate-300 border-slate-200"
+                  : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50"
               }`}
             >
               ←
             </button>
 
-            {!isLastQuestion ? (
+            {!isLast ? (
               <button
-                type="button"
                 onClick={handleNext}
-                disabled={!hasAnswerForCurrent}
-                className={`inline-flex items-center justify-center h-12 w-12 rounded-full border text-lg shadow-sm transition ${
-                  !hasAnswerForCurrent
-                    ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed"
-                    : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50 hover:shadow-md"
+                disabled={!hasAnswer}
+                className={`h-12 w-12 rounded-full border text-lg shadow-sm ${
+                  !hasAnswer
+                    ? "bg-slate-100 text-slate-300 border-slate-200"
+                    : "bg-white text-quizPrimary border-slate-200 hover:bg-sky-50"
                 }`}
               >
                 →
               </button>
             ) : (
               <button
-                type="button"
                 onClick={handleSubmit}
-                disabled={!hasAnswerForCurrent}
-                className={`px-8 py-2 rounded-full text-sm font-semibold transition shadow-sm border ${
-                  !hasAnswerForCurrent
-                    ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed"
-                    : "bg-sky-200 text-quizPrimary border-sky-300 hover:bg-sky-300 hover:shadow-md"
+                disabled={!hasAnswer}
+                className={`px-8 py-2 rounded-full text-sm font-semibold shadow-sm border ${
+                  !hasAnswer
+                    ? "bg-slate-100 text-slate-300 border-slate-200"
+                    : "bg-sky-200 text-quizPrimary border-sky-300 hover:bg-sky-300"
                 }`}
               >
                 Submit
