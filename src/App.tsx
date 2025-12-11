@@ -14,6 +14,7 @@ const App: React.FC = () => {
   );
   const [view, setView] = useState<View>("quiz");
   const [scorePercent, setScorePercent] = useState(0);
+  const [animatedScore, setAnimatedScore] = useState(0);
 
   const questionHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const currentQuestion: Question = useMemo(
@@ -60,8 +61,27 @@ const App: React.FC = () => {
     setAnswers(Array(TOTAL_QUESTIONS).fill(null));
     setCurrentIndex(0);
     setScorePercent(0);
+    setAnimatedScore(0);
     setView("quiz");
   };
+
+  useEffect(() => {
+    if (view === "score") {
+      let start = 0;
+      const end = scorePercent;
+      const duration = 1000;
+      const step = end / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= end) {
+          start = end;
+          clearInterval(timer);
+        }
+        setAnimatedScore(Math.round(start));
+      }, 16);
+      return () => clearInterval(timer);
+    }
+  }, [view, scorePercent]);
 
   if (view === "score") {
     return (
@@ -75,10 +95,18 @@ const App: React.FC = () => {
           <p className="text-3xl text-quizPrimary font-display mb-4">
             Your Final Score Is
           </p>
-          <p className="text-[72px] font-display text-quizPrimary">
-            {scorePercent}
+
+          <motion.p
+            key={animatedScore}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="text-[72px] font-display text-quizPrimary"
+          >
+            {animatedScore}
             <span className="text-3xl ml-1">%</span>
-          </p>
+          </motion.p>
+
           <button
             onClick={handleRestart}
             className="mt-12 px-10 py-3 rounded-full bg-sky-200 text-quizPrimary shadow hover:bg-sky-300 transition"
