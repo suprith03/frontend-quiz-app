@@ -161,7 +161,7 @@ const App: React.FC = () => {
               <h1
                 ref={questionHeadingRef}
                 tabIndex={-1}
-                className="font-display text-[44px] text-quizPrimary mb-2 italic tracking-tight"
+                className="font-display text-[44px] text-quizPrimary mb-2 italic tracking-tight font-bold"
               >
                 Test Your Knowledge
               </h1>
@@ -191,25 +191,25 @@ const App: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-4"
+                className="space-y-4 flex flex-col items-center"
               >
                 <p className="text-sm text-slate-500 font-medium">
                   Question {currentIndex + 1} of {TOTAL_QUESTIONS}
                 </p>
 
-                <div className="rounded-2xl bg-gradient-to-r from-sky-100 to-sky-200 px-6 py-4 text-[16px] font-medium text-slate-800 border border-sky-100 shadow-sm">
+                <div className="w-full rounded-2xl bg-gradient-to-r from-sky-100 to-sky-200 px-6 py-4 text-[16px] font-medium text-slate-800 border border-sky-100 shadow-sm text-center">
                   <span className="mr-2 font-semibold">{currentIndex + 1}.</span>
                   {currentQuestion.text}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 w-full">
                   {currentQuestion.options.map((option, idx) => {
                     const selected = answers[currentIndex] === idx;
                     return (
                       <button
                         key={option}
                         onClick={() => handleSelect(idx)}
-                        className={`w-full text-left px-6 py-4 rounded-2xl border bg-gradient-to-r from-sky-50 to-sky-100 shadow-sm text-[16px] font-medium ${
+                        className={`w-full text-center px-6 py-4 rounded-2xl border bg-gradient-to-r from-sky-50 to-sky-100 shadow-sm text-[16px] font-medium ${
                           selected
                             ? "border-sky-400 ring-2 ring-sky-300"
                             : "border-sky-100"
